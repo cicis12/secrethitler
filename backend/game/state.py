@@ -14,3 +14,4 @@ class State(BaseModel):
     isDead: List[bool]
     lastPlacedPolicy: char 
     calendarState: int
+    prevPresidentCandidate: int
