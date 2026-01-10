@@ -10,50 +10,44 @@ def reshuffle(state: State):
     random.shuffle(discard_copy)
     state.policyTiles = state.discardPile+state.policyTiles
 
+#to be deleted
+def DrawCards(state: State):
+    if len(state.policyTiles) < 3:
+        reshuffle(state)
+    cards= []
+    cards.add(state.policyTiles.pop())
+    cards.add(state.policyTiles.pop())
+    cards.add(state.policyTiles.pop())
+    reutrn cards
 
-def apply_move(state: State,move: Move) -> State:
-    newState = state.copy(deep=True)
-
-    if move.moveType == "DrawCards":
-        if len(newState.policyTiles) < 3:
-            reshuffle(newState)
-        newState.policyTiles.pop()
-        newState.policyTiles.pop()
-        newState.policyTiles.pop()
-
-    elif move.moveType == "PlaceCard":
-        if move.cardType == "L":
-            newState.numberOfLiberalPolicies+=1
-        else:
-            newState.numberOfFascistPolicies+=1
-
-    elif move.moveType == "NewGov":
-        newState.currentChancellor=move.newChancellor
-        newState.currentPresident=move.newPresident
-
-    elif move.moveType == "PlaceRandom":
-        if len(newState.policyTiles) < 1:
-            reshuffle(newState)
-        card=newState.policyTiles.pop()
-        if card == 'L':
-            newState.numberOfLiberalPolicies+=1
-        else:
-            newState.numberOfFascistPolicies+=1
-        
-    elif move.moveType == "KillPlayer":
-        try:
-            if not newState.isDead[move.playerToKill]:
-                newState.isDead[move.playerToKill] = True
-            else:
-                raise InvalidMoveError(
-                    f"Player tried to kill an already-dead player {move.playerToKill}"
-                )
-        except IndexError:
-            raise InvalidMoveError("Invalid killPlayer index")
-
+def PlaceCard(state: State, cardType):
+    if cardType == "L":
+       state.numberOfLiberalPolicies+=1
     else:
-        raise InvalidMoveError(
-            f"Unknown move type: {move.moveType}"
-        )
-    return newState
+        state.numberOfFascistPolicies+=1
+
+def NewGov(state: State, newChancellor, newPresident):
+    state.currentChancellor=move.newChancellor
+    state.currentPresident=move.newPresident
+
+def PlaceRandom(state: State):
+    if len(state.policyTiles) < 1:
+        reshuffle(state)
+    card=state.policyTiles.pop()
+    if card == 'L':
+        state.numberOfLiberalPolicies+=1
+    else:
+        state.numberOfFascistPolicies+=1
+
+def KillPlayer(state: State, playerToKill):
+    try:
+        if not state.isDead[move.playerToKill]:
+            state.isDead[move.playerToKill] = True
+        else:
+            raise InvalidMoveError(
+                f"Player tried to kill an already-dead player {move.playerToKill}"
+            )
+    except IndexError:
+        raise InvalidMoveError("Invalid killPlayer index")
+
     
